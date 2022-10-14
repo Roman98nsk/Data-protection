@@ -5,16 +5,16 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdbool.h>
+#include <math.h>
 
 long expo(long long a, long long x, long long p);
 bool isPrime(long long int n);
 
 int main() {
     long long int p = 0, g = 8, q = 5, Xa, Xb, Xc, Ya, Yb, Yc, Zab, Zba, Zac, Zca, Zbc, Zcb;
-
+srand(time(NULL));
     do {
-        srand(time(NULL));
-        q = 2 + rand() % 10; 
+        q = 2 + rand() % 1000000; 
         p = 2 * q + 1;
     } while(!isPrime(p) || !isPrime(q));
 
@@ -24,9 +24,9 @@ int main() {
 
     printf("p = %lld, q = %lld, g = %lld\n", p, q, g);
 
-    Xa = 1 + rand() % 100;
-    Xb = 1 + rand() % 100;
-    Xc = 1 + rand() % 100;
+    Xa = 1 + rand() % 1000000000;
+    Xb = 1 + rand() % 1000000000;
+    Xc = 1 + rand() % 1000000000;
     printf("Secret key: Xa = %lld, Xb = %lld, Xc = %lld\n", Xa, Xb, Xc);
 
     Ya = expo(g, Xa, p);
@@ -63,7 +63,7 @@ long expo(long long a, long long x, long long p) {
 
 bool isPrime(long long int n) {
     if (n > 1) {
-        for (int i = 2; i < n; i++)
+        for (int i = 2; i < sqrt(n); i++)
             if (n % i == 0)
                 return false;
         return true;

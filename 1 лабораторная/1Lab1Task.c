@@ -17,7 +17,7 @@ int main() {
 long expo(long long a, long long x, long long p) {
     int r;
     long y = 1;
-    
+
     while(x > 0) {
         r = x % 2;
 

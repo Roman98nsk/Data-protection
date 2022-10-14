@@ -8,8 +8,8 @@
 
 int main() {
     srand(time(NULL));
-    long long a = 2 + rand() % 1000000000;
-    long long b = 2 + rand() % 1000000000;
+    long long a = 2 + rand() % 100000000;
+    long long b = 2 + rand() % 100000000;
 
     printf("%lld %lld\n", a, b);
 
@@ -36,6 +36,7 @@ int main() {
         }
         printf("x = %d\ny = %d\n", U[1], U[2]);
         printf("%d\n", *U);
+        printf("%d", a * U[1] + b * U[2] == U[0]);
     } else {
         printf("n/a\n");
         return 0;
