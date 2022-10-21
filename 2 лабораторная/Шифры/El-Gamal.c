@@ -16,7 +16,7 @@ int main() {
     srand(time(NULL));
 
     do {
-        p = 3 + rand() % 1000000000;
+        p = 3 + rand() % 100;
     } while (isPrime(p) == 0);
 
     m = 2 + rand() % (p - 1);

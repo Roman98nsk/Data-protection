@@ -8,8 +8,11 @@
 
 int main() {
     srand(time(NULL));
-    long long a = 2 + rand() % 100000000;
-    long long b = 2 + rand() % 100000000;
+    //long long a = 2 + rand() % 100000000;
+    //long long b = 2 + rand() % 100000000;
+
+    long long a = 101;
+    long long b = 192;
 
     printf("%lld %lld\n", a, b);
 

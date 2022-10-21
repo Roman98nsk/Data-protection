@@ -22,4 +22,5 @@ int main() {
     printf("m = %lld, k = %lld, e = %lld, \n", m, k, e);
     m = e ^ k;
     printf("m decode = %lld\n", m);
+    return 0;
 }
