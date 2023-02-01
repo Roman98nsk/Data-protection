@@ -3,61 +3,80 @@
 #include <time.h>
 #include <math.h>
 #include <stdbool.h>
+#include <malloc.h>
 
-#include "Main.h"
+int El_Gamal(long long int m);
+int RSA(long long int m);
+int Shamir(long long int m);
+int Vernam(long long int m);
+
+bool isPrime(long long int n);
+long long int expo(long long int a, long long int x, long long int p);
+long long int gcd(long long int n1, long long int n2);
+long long int Euclid(long long int a, long long int b);
 
 int main() {
-    char find;
-    char s[100000000];
-    char s_new[100000000];
-    FILE *fp1;
-    FILE *fp2;
+    int find;
+    long long int m = 0;
 
-    fp1 = fopen("Encode.bin", "rb");
-    fp2 = fopen("Decode.bin", "wr");
+    FILE *file;
+    int i;
+    //тут хранится путь
+    char filename[BUFSIZ];
+    //сюда считаем файл
+    char write_file[BUFSIZ];
 
-    while (!feof(fp1)) {
-        fgets(s, 8, fp1);
-        *s_new = Vernam(s);
-        fwrite(s_new, 8, 1, fp2);
+    printf("Введите путь до файла: ");
+    scanf("%s", filename);
+    file = fopen(filename, "rb");
+
+    while ((write_file[i] = fgetc(file)) != EOF) {
+        m++;
+        if (write_file[i] == '\n') {
+            write_file[i] = '\0';
+            //printf("%s\n", write_file);
+            i = 0;
+        } else i++;
     }
+    write_file[i] = '\0';
 
-    printf("Выберите шифр (Gamal - 'g', RSA - 'r', Shamir - 's', Vernam - 'v'):\n");
-    scanf("%c", &find);
-    
-    /*switch (find) {
-        case 'g': {
-            El_Gamal();
+    printf("Выберите шифр (Gamal - '1', RSA - '2', Shamir - '3', Vernam - '4'):\n");
+    scanf("%d", &find);
+
+    switch (find) {
+        case 1: {
+            El_Gamal(m);
             break;
         }
 
-        case 'r': {
-            RSA();
+        case 2: {
+            RSA(m);
             break;
         }
         
-        case 's': {
-            Shamir();
+        case 3: {
+            Shamir(m);
             break;
         }
 
-        case 'v': {
-            Vernam();
+        case 4: {
+            Vernam(m);
             break;
         }
-    }*/
+    }
+    fclose(file);
     return 0;
 }
 
-int El_Gamal() {
-    long long int p = 0, m = 0, g = 0, c_a = 0, c_b = 0, d_a = 0, d_b = 0, k = 0, r = 0, e = 0, m_new = 0;
+int El_Gamal(long long int m) {
+    long long int p = 0, g = 0, c_a = 0, c_b = 0, d_a = 0, d_b = 0, k = 0, r = 0, e = 0, m_new = 0;
     srand(time(NULL));
 
     do {
-        p = 3 + rand() % 100;
+        p = 3 + rand() % 1000000;
     } while (isPrime(p) == 0);
 
-    m = 2 + rand() % (p - 1);
+    //m = 2 + rand() % (p - 1);
 
     g = 2 + rand() % (p - 1);
 
@@ -79,13 +98,13 @@ int El_Gamal() {
     return 0;
 }
 
-int RSA() {
-    long long int P_A = 0, P_B = 0, Q_A = 0, Q_B = 0, N_A = 0, N_B = 0, f_A = 0, f_B = 0, d_A = 0, d_B = 0, c_A = 0, c_B = 0, m = 0, m_new = 0, e = 0;
+int RSA(long long int m) {
+    long long int P_A = 0, P_B = 0, Q_A = 0, Q_B = 0, N_A = 0, N_B = 0, f_A = 0, f_B = 0, d_A = 0, d_B = 0, c_A = 0, c_B = 0, m_new = 0, e = 0;
     srand(time(NULL));
 
     do {
-        P_A = rand() % 100;
-        Q_A = rand() % 100;
+        P_A = rand() % 1000000;
+        Q_A = rand() % 1000000;
     } while (!isPrime(P_A) || !isPrime(Q_A));
 
     N_A = P_A * Q_A;
@@ -106,8 +125,8 @@ int RSA() {
     }
     //-2 % 10 = -2 (+10)
     do {
-        P_B = rand() % 100;
-        Q_B = rand() % 100;
+        P_B = rand() % 1000000;
+        Q_B = rand() % 1000000;
     } while (!isPrime(P_B) || !isPrime(Q_B));
 
     N_B = P_B * Q_B;
@@ -125,7 +144,7 @@ int RSA() {
        // return 0;
     }
 
-    m = rand() % N_B;
+    //m = rand() % N_B;
 
     e = expo(m, d_B, N_B);
 
@@ -135,22 +154,22 @@ int RSA() {
     return 0;
 }
 
-int Shamir() {
-    long long int p = 0, m = 0, c_a = 0, d_a = 0, c_b = 0, d_b = 0, x1 = 0, x2 = 0, x3 = 0, x4 = 0;
+int Shamir(long long int m) {
+    long long int p = 0, c_a = 0, d_a = 0, c_b = 0, d_b = 0, x1 = 0, x2 = 0, x3 = 0, x4 = 0;
     srand(time(NULL));
 
     do {
-        p = 2 + rand() % 20;
-        m = 2 + rand() % 20;
+        p = 2 + rand() % 1000000;
+        //m = 2 + rand() % 20;
     } while (!isPrime(p) || m >= p);
 
     do {
-        c_a = 2 + rand() % 20; 
+        c_a = 2 + rand() % 100000; 
         d_a = 2 + rand() % (p - 1);
     } while ((c_a * d_a) % (p - 1) != 1 || gcd(c_a, p - 1) != 1);
 
     do {
-        c_b = 2 + rand() % 20;
+        c_b = 2 + rand() % 100000;
         d_b = 2 + rand() % (p - 1);
     } while ((c_b * d_b) % (p - 1) != 1 || gcd(c_b, p - 1) != 1);
 
@@ -165,7 +184,7 @@ int Shamir() {
 }
 
 int Vernam(long long int m) {
-    long long int k = 0, e = 0, c = 1, count = 0;
+    long long int k = 0, e = 0, c = 1, count = 0, m_new = 0;
     srand(time(NULL));
 
     while(1) {
@@ -179,9 +198,9 @@ int Vernam(long long int m) {
     k = c / 2 + rand() % c / 2;
 
     e = m ^ k;
-    //printf("m = %lld, k = %lld, e = %lld, \n", m, k, e);
-    //m = e ^ k;
-    //printf("m decode = %lld\n", m);
+    printf("m = %lld, k = %lld, e = %lld, \n", m, k, e);
+    m_new = e ^ k;
+    printf("m decode = %lld\n", m_new);
     return e;
 }
 
